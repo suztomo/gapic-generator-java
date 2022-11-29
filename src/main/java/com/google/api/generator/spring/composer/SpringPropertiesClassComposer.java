@@ -167,14 +167,17 @@ public class SpringPropertiesClassComposer implements ClassComposer {
             true,
             defaultCredentialScopes,
             credentialsAnnotations);
+    statements.add(SpringPropertiesCommentComposer.createCredentialsPropertyComment());
     statements.add(credentialsStatement);
     //   private String quotaProjectId;
     ExprStatement quotaProjectIdVarStatement =
         createMemberVarStatement("quotaProjectId", TypeNode.STRING, false, null, null);
+    statements.add(SpringPropertiesCommentComposer.createQuotaProjectIdPropertyComment());
     statements.add(quotaProjectIdVarStatement);
     //   private Integer executorThreadCount;
     ExprStatement executorThreadCountVarStatement =
         createMemberVarStatement("executorThreadCount", TypeNode.INT_OBJECT, false, null, null);
+    statements.add(SpringPropertiesCommentComposer.createExecutorThreadCountPropertyComment());
     statements.add(executorThreadCountVarStatement);
     if (hasRestOption) {
       ExprStatement useRestVarStatement =
@@ -185,6 +188,7 @@ public class SpringPropertiesClassComposer implements ClassComposer {
               ValueExpr.withValue(
                   PrimitiveValue.builder().setType(TypeNode.BOOLEAN).setValue("false").build()),
               null);
+      statements.add(SpringPropertiesCommentComposer.createUseRestPropertyComment());
       statements.add(useRestVarStatement);
     }
 
@@ -206,8 +210,11 @@ public class SpringPropertiesClassComposer implements ClassComposer {
                 propertyType = TypeNode.DOUBLE_OBJECT;
               }
               String propertyName = Joiner.on("").join(methodAndPropertyName);
+              String retryProperty = methodAndPropertyName.get(1);
               ExprStatement retrySettingsStatement =
                   createMemberVarStatement(propertyName, propertyType, false, null, null);
+              getterAndSetter.add(
+                  SpringPropertiesCommentComposer.createRetryPropertyComment(retryProperty));
               getterAndSetter.add(retrySettingsStatement);
               return getterAndSetter;
             },
